@@ -37,10 +37,35 @@ class MyWebServer(socketserver.BaseRequestHandler):
         '''
         print("---------")
         print(self.data)
-        print("---------\n")
+        print("---------")
         '''
         f = self.data[1]
-        self.request.send(bytearray('HTTP/1.0 200 OK\n', 'utf-8'))
+        f2 = f.split("/")
+        f3 = []
+        for piece in f2:
+            if piece != "" and piece != "..":
+                f3.append(piece)
+        print("len:", len(f3))
+        if len(f3) > 1:
+            print("Flag 1 -------------\n")
+            pass
+        elif len(f3) == 1:
+            fname = f2[0]
+            print("Flag 2 -------------\n")
+            try:
+                x = open("www/" + fname, r)
+                self.request.send(bytearray('HTTP/1.0 200 OK\n', 'utf-8'))
+                answer = ""
+                for line in x:
+                    answer += line
+                self.request.sendall(bytearray(answer, 'utf-8'))
+                print("Worked -----------\n")
+            except:
+                self.request.sendall(bytearray('HTTP/1.0 404 Not Found', 'utf-8'))
+                print("Broke -----------\n")
+        else:
+            print("Flag 3 -------------\n")
+        
         #self.request.sendall(bytearray("OK",'utf-8'))
 
 if __name__ == "__main__":
