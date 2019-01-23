@@ -1,5 +1,6 @@
 #  coding: utf-8 
 import socketserver
+import mimetypes
 
 # Copyright 2013 Abram Hindle, Eddie Antonio Santos
 # 
@@ -30,9 +31,17 @@ import socketserver
 class MyWebServer(socketserver.BaseRequestHandler):
     
     def handle(self):
-        self.data = self.request.recv(1024).strip()
-        print ("Got a request of: %s\n" % self.data)
-        self.request.sendall(bytearray("OK",'utf-8'))
+        #self.data = self.request.recv(1024).strip()
+        #print ("Got a request of: %s\n" % self.data)
+        self.data = self.request.recv(1024).decode().split()
+        '''
+        print("---------")
+        print(self.data)
+        print("---------\n")
+        '''
+        f = self.data[1]
+        self.request.send(bytearray('HTTP/1.0 200 OK\n', 'utf-8'))
+        #self.request.sendall(bytearray("OK",'utf-8'))
 
 if __name__ == "__main__":
     HOST, PORT = "localhost", 8080
