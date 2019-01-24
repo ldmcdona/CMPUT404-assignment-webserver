@@ -60,17 +60,17 @@ class MyWebServer(socketserver.BaseRequestHandler):
                     mimetypes.init()
                     b = mimetypes.guess_type(a)
                     print(a, b[0])
-                    self.request.send(bytearray('HTTP/1.1 200 OK\n', 'utf-8'))
-                    self.request.sendall(bytearray(b[0], 'utf-8'))
+                    self.request.send(bytearray('HTTP/1.1 200 OK\r\n', 'utf-8'))
+                    self.request.sendall(bytearray("Content-Type: " + b[0] + "\r\n", 'utf-8'))
                     print("Worked -----------")
                 except Exception as e:
                     print(e)
-                    self.request.sendall(bytearray('HTTP/1.1 404 Not Found', 'utf-8'))
+                    self.request.sendall(bytearray('HTTP/1.1 404 Not Found\r\n', 'utf-8'))
                     print("Broke -----------")
             else:
                 #print("Flag 3 -------------")
             
-                self.request.sendall(bytearray('HTTP/1.1 404 Not Found', 'utf-8'))
+                self.request.sendall(bytearray('HTTP/1.1 404 Not Found\r\n', 'utf-8'))
 
 if __name__ == "__main__":
     HOST, PORT = "localhost", 8080
