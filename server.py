@@ -29,6 +29,10 @@ import mimetypes
 
 
 class MyWebServer(socketserver.BaseRequestHandler):
+	#Dear future Liam: you've misunderstood the assignment. maybe
+	#You want to return the location of the folder or file.
+	#Folders are html automatically. 
+	#Location: lcoalhost:8080/www/base.css\r\n
     
     def handle(self):
         self.data = self.request.recv(1024).decode().split()
