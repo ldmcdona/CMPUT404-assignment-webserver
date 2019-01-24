@@ -1,6 +1,7 @@
 #  coding: utf-8 
 import socketserver
 import mimetypes
+import pdb
 
 # Copyright 2013 Abram Hindle, Eddie Antonio Santos
 # 
@@ -50,18 +51,20 @@ class MyWebServer(socketserver.BaseRequestHandler):
             print("Flag 1 -------------\n")
             pass
         elif len(f3) == 1:
-            fname = f2[0]
+            fname = f3[0]
             print("Flag 2 -------------\n")
             try:
-                x = open("www/" + fname, r)
-                self.request.send(bytearray('HTTP/1.0 200 OK\n', 'utf-8'))
+                #pdb.set_trace()
+                print("www/" + fname)
+                x = open("www/" + fname, "r")
+                self.request.send(bytearray('HTTP/1.1 200 OK\n', 'utf-8'))
                 answer = ""
                 for line in x:
                     answer += line
                 self.request.sendall(bytearray(answer, 'utf-8'))
                 print("Worked -----------\n")
             except:
-                self.request.sendall(bytearray('HTTP/1.0 404 Not Found', 'utf-8'))
+                self.request.sendall(bytearray('HTTP/1.1 404 Not Found', 'utf-8'))
                 print("Broke -----------\n")
         else:
             print("Flag 3 -------------\n")
