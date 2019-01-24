@@ -40,36 +40,39 @@ class MyWebServer(socketserver.BaseRequestHandler):
         print(self.data)
         print("---------")
         '''
-        f = self.data[1]
-        f2 = f.split("/")
-        f3 = []
-        for piece in f2:
-            if piece != "" and piece != "..":
-                f3.append(piece)
-        print("len:", len(f3))
-        if len(f3) > 1:
-            print("Flag 1 -------------\n")
-            pass
-        elif len(f3) == 1:
-            fname = f3[0]
-            print("Flag 2 -------------\n")
-            try:
-                #pdb.set_trace()
-                print("www/" + fname)
-                x = open("www/" + fname, "r")
-                self.request.send(bytearray('HTTP/1.1 200 OK\n', 'utf-8'))
-                answer = ""
-                for line in x:
-                    answer += line
-                self.request.sendall(bytearray(answer, 'utf-8'))
-                print("Worked -----------\n")
-            except:
-                self.request.sendall(bytearray('HTTP/1.1 404 Not Found', 'utf-8'))
-                print("Broke -----------\n")
+        if self.data[0] != "GET":
+            self.request.sendall(bytearray('HTTP/1.1 405 Method Not Allowed', 'utf-8'))
         else:
-            print("Flag 3 -------------\n")
-        
-        #self.request.sendall(bytearray("OK",'utf-8'))
+            f = self.data[1]
+            f2 = f.split("/")
+            f3 = []
+            for piece in f2:
+                if piece != "" and piece != "..":
+                    f3.append(piece)
+                    print("len:", len(f3))
+            if len(f3) > 1:
+                print("Flag 1 -------------")
+                pass
+            elif len(f3) == 1:
+                fname = f3[0]
+                print("Flag 2 -------------")
+                try:
+                    #pdb.set_trace()
+                    #print("www/" + fname)
+                    x = open("www/" + fname, "r")
+                    self.request.send(bytearray('HTTP/1.1 200 OK\n', 'utf-8'))
+                    answer = ""
+                    for line in x:
+                        answer += line
+                        self.request.sendall(bytearray(answer, 'utf-8'))
+                        print("Worked -----------")
+                except:
+                    self.request.sendall(bytearray('HTTP/1.1 404 Not Found', 'utf-8'))
+                    print("Broke -----------")
+            else:
+                print("Flag 3 -------------")
+            
+                #self.request.sendall(bytearray("OK",'utf-8'))
 
 if __name__ == "__main__":
     HOST, PORT = "localhost", 8080
