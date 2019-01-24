@@ -1,7 +1,6 @@
 #  coding: utf-8 
 import socketserver
 import mimetypes
-import pdb
 
 # Copyright 2013 Abram Hindle, Eddie Antonio Santos
 # 
@@ -32,8 +31,6 @@ import pdb
 class MyWebServer(socketserver.BaseRequestHandler):
     
     def handle(self):
-        #self.data = self.request.recv(1024).strip()
-        #print ("Got a request of: %s\n" % self.data)
         self.data = self.request.recv(1024).decode().split()
         '''
         print("---------")
@@ -49,34 +46,31 @@ class MyWebServer(socketserver.BaseRequestHandler):
             for piece in f2:
                 if piece != "" and piece != "..":
                     f3.append(piece)
-                    print("len:", len(f3))
+                    #print("len:", len(f3))
             if len(f3) > 1:
-                print("Flag 1 -------------")
+                #print("Flag 1 -------------")
                 pass
             elif len(f3) == 1:
                 fname = f3[0]
-                print("Flag 2 -------------")
+                #print("Flag 2 -------------")
                 try:
-                    #pdb.set_trace()
-                    #print("www/" + fname)
                     a = "www/" + fname
-                    b = mimetype.guess_type(a)
+                    b = ""
                     x = open(a, "r")
+                    mimetypes.init()
+                    b = mimetypes.guess_type(a)
+                    print(a, b[0])
                     self.request.send(bytearray('HTTP/1.1 200 OK\n', 'utf-8'))
-                    self.request.send(bytearray(b, 'utf-8'))
-                    self.request.sendall(bytearray(x, 'utf-8'))
-                    #answer = ""
-                    #for line in x:
-                        #answer += line
-                        #self.request.sendall(bytearray(answer, 'utf-8'))
-                        #print("Worked -----------")
-                except:
+                    self.request.sendall(bytearray(b[0], 'utf-8'))
+                    print("Worked -----------")
+                except Exception as e:
+                    print(e)
                     self.request.sendall(bytearray('HTTP/1.1 404 Not Found', 'utf-8'))
                     print("Broke -----------")
             else:
-                print("Flag 3 -------------")
+                #print("Flag 3 -------------")
             
-                #self.request.sendall(bytearray("OK",'utf-8'))
+                self.request.sendall(bytearray('HTTP/1.1 404 Not Found', 'utf-8'))
 
 if __name__ == "__main__":
     HOST, PORT = "localhost", 8080
