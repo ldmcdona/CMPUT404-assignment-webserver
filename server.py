@@ -59,13 +59,17 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 try:
                     #pdb.set_trace()
                     #print("www/" + fname)
-                    x = open("www/" + fname, "r")
+                    a = "www/" + fname
+                    b = mimetype.guess_type(a)
+                    x = open(a, "r")
                     self.request.send(bytearray('HTTP/1.1 200 OK\n', 'utf-8'))
-                    answer = ""
-                    for line in x:
-                        answer += line
-                        self.request.sendall(bytearray(answer, 'utf-8'))
-                        print("Worked -----------")
+                    self.request.send(bytearray(b, 'utf-8'))
+                    self.request.sendall(bytearray(x, 'utf-8'))
+                    #answer = ""
+                    #for line in x:
+                        #answer += line
+                        #self.request.sendall(bytearray(answer, 'utf-8'))
+                        #print("Worked -----------")
                 except:
                     self.request.sendall(bytearray('HTTP/1.1 404 Not Found', 'utf-8'))
                     print("Broke -----------")
