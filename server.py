@@ -1,6 +1,8 @@
 #  coding: utf-8 
 import socketserver
 import mimetypes
+import os
+import re
 
 # Copyright 2013 Abram Hindle, Eddie Antonio Santos
 # 
@@ -45,12 +47,35 @@ class MyWebServer(socketserver.BaseRequestHandler):
             self.request.sendall(bytearray('HTTP/1.1 405 Method Not Allowed', 'utf-8'))
         else:
             f = self.data[1]
+            f = "www" + f
+            temp = f.split("/..")
+            f = ''
+            for i in temp:
+                f += i
+            #print(f)
+            f_real = os.path.isfile(f)
+            d_real = os.path.isdir(f)
+            #print("Name:", f, "is file:", f_real, "is dir:", d_real)
+            if f_real:
+                #print(f)
+                b = mimetypes.guess_type(f)
+                self.request.send(bytearray('HTTP/1.1 200 OK\r\n', 'utf-8'))
+                self.request.sendall(bytearray("Content-Type: " + b[0] + "\r\n", 'utf-8'))
+            elif d_real:
+                b = "text/html"
+                self.request.send(bytearray('HTTP/1.1 200 OK\r\n', 'utf-8'))
+                self.request.sendall(bytearray('Content-Type: ' + b + "\r\n", 'utf-8'))
+            else:
+                self.request.sendall(bytearray('HTTP/1.1 404 Not Found\r\n', 'utf-8'))
+                
+            """
             f2 = f.split("/")
             f3 = []
             for piece in f2:
                 if piece != "" and piece != "..":
                     f3.append(piece)
                     #print("len:", len(f3))
+            
             if len(f3) > 1:
                 #print("Flag 1 -------------")
                 pass
@@ -58,9 +83,10 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 fname = f3[0]
                 #print("Flag 2 -------------")
                 try:
+                    f_real = os.
                     a = "www/" + fname
                     b = ""
-                    x = open(a, "r")
+                    #x = open(a, "r")
                     mimetypes.init()
                     b = mimetypes.guess_type(a)
                     print(a, b[0])
@@ -75,6 +101,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 #print("Flag 3 -------------")
             
                 self.request.sendall(bytearray('HTTP/1.1 404 Not Found\r\n', 'utf-8'))
+            """
 
 if __name__ == "__main__":
     HOST, PORT = "localhost", 8080
