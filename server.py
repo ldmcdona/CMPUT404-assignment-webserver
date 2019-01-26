@@ -57,7 +57,9 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 #print(f)
                 b = mimetypes.guess_type(f)
                 self.request.send(bytearray('HTTP/1.1 200 OK\r\n', 'utf-8'))
-                self.request.sendall(bytearray("Content-Type: " + b[0] + "\r\n", 'utf-8'))
+                self.request.send(bytearray("Content-Type: " + b[0] + "\r\n", 'utf-8'))
+                x = open(f, "r")
+                self.request.sendall(bytearray(x.read(), 'utf-8'))
             elif d_real:
                 b = "text/html"
                 self.request.send(bytearray('HTTP/1.1 200 OK\r\n', 'utf-8'))
