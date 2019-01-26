@@ -24,3 +24,6 @@ examples thus some of the code is Copyright © 2001-2013 Python
 Software Foundation; All Rights Reserved under the PSF license (GPL
 compatible) http://docs.python.org/2/library/socketserver.html
 
+#Edits done by Liam McDonald
+
+#Collaboration from Fred (rsauveho), who helped me understand what my ultimate goal was. 
