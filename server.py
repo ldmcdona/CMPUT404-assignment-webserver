@@ -62,8 +62,10 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 self.request.sendall(bytearray(x.read(), 'utf-8'))
             elif d_real:
                 b = "text/html"
+                x = open("www/index.html", "r")
                 self.request.send(bytearray('HTTP/1.1 200 OK\r\n', 'utf-8'))
-                self.request.sendall(bytearray('Content-Type: ' + b + "\r\n", 'utf-8'))
+                self.request.send(bytearray('Content-Type: ' + b + "\r\n", 'utf-8'))
+                self.request.sendall(bytearray(x.read(), 'utf-8'))
             else:
                 self.request.sendall(bytearray('HTTP/1.1 404 Not Found\r\n', 'utf-8'))
                 
